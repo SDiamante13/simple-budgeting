@@ -80,10 +80,10 @@ class UserRepositoryImplTest {
                 .category("Movies")
                 .maxThreshold(120)
                 .build();
-        userRepository.updateBudgetAllowance(USERNAME, "AAA", newBudgetAllowance);
+
+        userRepository.updateBudgetAllowance(USERNAME, "Entertainment", newBudgetAllowance);
 
         User actualUser = mongoTemplate.findOne(findByUsernameQuery(USERNAME), User.class);
-
         assertThat(actualUser.getBudgetAllowances().get(2).getCategory()).isEqualTo("Movies");
         assertThat(actualUser.getBudgetAllowances().get(2).getMaxThreshold()).isEqualTo(120);
     }
