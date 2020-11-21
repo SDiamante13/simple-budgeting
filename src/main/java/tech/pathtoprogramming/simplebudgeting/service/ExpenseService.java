@@ -9,5 +9,6 @@ public interface ExpenseService {
     void saveExpense(String username, ExpenseDto expenseDto);
     ExpenseListDto getExpenseHistory(String username);
     ExpenseListDto getMonthlyExpensesByCategory(String username, String category, Month month);
+    ExpenseListDto getMonthlyExpenses(String username, Month month);
     void removeExpense(String username, String expenseId);
 }

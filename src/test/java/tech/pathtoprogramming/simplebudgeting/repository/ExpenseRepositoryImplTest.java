@@ -12,6 +12,7 @@ import tech.pathtoprogramming.simplebudgeting.document.Expense;
 import java.time.LocalDate;
 import java.util.List;
 
+import static java.time.Month.APRIL;
 import static java.time.Month.MAY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static tech.pathtoprogramming.simplebudgeting.Constants.*;
@@ -82,6 +83,14 @@ class ExpenseRepositoryImplTest {
 
         assertThat(actualExpenses.size()).isEqualTo(1);
         assertThat(actualExpenses.get(0).getDescription()).isEqualTo("Water Bill");
+    }
+
+    @Test
+    void getExpensesByMonth() {
+        List<Expense> actualExpenses = expenseRepository.getExpensesByMonth(USERNAME, APRIL);
+
+        assertThat(actualExpenses.size()).isEqualTo(1);
+        assertThat(actualExpenses.get(0).getDescription()).isEqualTo("Electric Bill");
     }
 
     private List<Expense> getExpensesForUser(String username) {

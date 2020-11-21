@@ -43,9 +43,27 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     @Override
     public List<Expense> getExpensesByCategoryAndMonth(String username, String category, Month month) {
         LocalDate beginningOfTheMonth = LocalDate.of(LocalDate.now().getYear(), month, 1);
+        LocalDate endOfMonth = LocalDate.of(LocalDate.now().getYear(), month, month.maxLength());
+
         Query query = findByUsernameQuery(username)
                 .addCriteria(where("category").is(category))
-                .addCriteria(where("transactionDate").gte(beginningOfTheMonth));
+                .addCriteria(where("transactionDate")
+                        .gte(beginningOfTheMonth)
+                        .lte(endOfMonth)
+                );
+        return mongoTemplate.find(query, Expense.class);
+    }
+
+    @Override
+    public List<Expense> getExpensesByMonth(String username, Month month) {
+        LocalDate beginningOfTheMonth = LocalDate.of(LocalDate.now().getYear(), month, 1);
+        LocalDate endOfMonth = LocalDate.of(LocalDate.now().getYear(), month, month.maxLength());
+
+        Query query = findByUsernameQuery(username)
+                .addCriteria(where("transactionDate")
+                        .gte(beginningOfTheMonth)
+                        .lte(endOfMonth)
+                );
         return mongoTemplate.find(query, Expense.class);
     }
 }
