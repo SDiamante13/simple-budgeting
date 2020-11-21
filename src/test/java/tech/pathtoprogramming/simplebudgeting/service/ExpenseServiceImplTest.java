@@ -13,6 +13,7 @@ import tech.pathtoprogramming.simplebudgeting.repository.ExpenseRepository;
 
 import java.time.LocalDate;
 
+import static java.time.Month.APRIL;
 import static java.time.Month.MAY;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -76,18 +77,29 @@ class ExpenseServiceImplTest {
     }
 
     @Test
-    void getMonthlyExpensesByCategory_() {
+    void getMonthlyExpensesByCategory_returnsListOfExpensesForDesiredMonthAndCategory() {
         when(mockExpenseRepository.getExpensesByCategoryAndMonth(USERNAME, "UTILITIES", MAY))
                 .thenReturn(singletonList(expense3));
 
         ExpenseListDto monthlyExpenses = expenseService.getMonthlyExpensesByCategory(USERNAME, "UTILITIES", MAY);
 
-        verify(mockExpenseRepository).getExpensesByCategoryAndMonth(USERNAME, "UTILITIES", MAY);
-
         assertThat(monthlyExpenses.getUsername()).isEqualTo(USERNAME);
         assertThat(monthlyExpenses.getExpenses().size()).isEqualTo(1);
         assertThat(monthlyExpenses.getExpenses().get(0).getCategory()).isEqualTo("UTILITIES");
         assertThat(monthlyExpenses.getExpenses().get(0).getTransactionDate()).isEqualTo("5/7/2020");
+    }
+
+    @Test
+    void getMonthlyExpenses_returnsListOfExpensesForDesiredMonth() {
+        when(mockExpenseRepository.getExpensesByMonth(USERNAME, APRIL))
+                .thenReturn(singletonList(expense2));
+
+        ExpenseListDto monthlyExpenses = expenseService.getMonthlyExpenses(USERNAME, APRIL);
+
+        assertThat(monthlyExpenses.getUsername()).isEqualTo(USERNAME);
+        assertThat(monthlyExpenses.getExpenses().size()).isEqualTo(1);
+        assertThat(monthlyExpenses.getExpenses().get(0).getDescription()).isEqualTo("Books");
+        assertThat(monthlyExpenses.getExpenses().get(0).getTransactionDate()).isEqualTo("4/29/2020");
     }
 
     @Test

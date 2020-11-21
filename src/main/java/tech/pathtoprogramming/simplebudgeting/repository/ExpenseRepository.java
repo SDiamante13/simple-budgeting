@@ -11,4 +11,5 @@ public interface ExpenseRepository {
     Expense updateExpense(Expense expense);
     void deleteExpense(String username, String expenseId);
     List<Expense> getExpensesByCategoryAndMonth(String username, String category, Month month);
+    List<Expense> getExpensesByMonth(String username, Month month);
 }

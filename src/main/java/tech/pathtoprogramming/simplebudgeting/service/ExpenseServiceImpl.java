@@ -44,7 +44,20 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public ExpenseListDto getMonthlyExpensesByCategory(String username, String category, Month month) {
-        List<Expense> monthlyExpenses = expenseRepository.getExpensesByCategoryAndMonth(username, category, month);
+        List<Expense> monthlyExpensesForCategory = expenseRepository.getExpensesByCategoryAndMonth(username, category, month);
+        List<ExpenseDto> expenseDtos = monthlyExpensesForCategory.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+        return ExpenseListDto.builder()
+                .username(username)
+                .expenses(expenseDtos)
+                .build();
+    }
+
+    @Override
+    public ExpenseListDto getMonthlyExpenses(String username, Month month) {
+        List<Expense> monthlyExpenses = expenseRepository.getExpensesByMonth(username, month);
         List<ExpenseDto> expenseDtos = monthlyExpenses.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());

@@ -1,5 +1,6 @@
 package tech.pathtoprogramming.simplebudgeting.repository;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,12 +9,15 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import tech.pathtoprogramming.simplebudgeting.document.Expense;
+import tech.pathtoprogramming.simplebudgeting.exception.DeletionException;
 
 import java.time.LocalDate;
 import java.util.List;
 
+import static java.time.Month.APRIL;
 import static java.time.Month.MAY;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static tech.pathtoprogramming.simplebudgeting.Constants.*;
 
 @DataMongoTest
@@ -67,7 +71,7 @@ class ExpenseRepositoryImplTest {
     }
 
     @Test
-    void deleteExpense_removesOneExpenseFromGivenUser() {
+    void deleteExpense_deletesOneExpenseFromGivenUser() {
         expenseRepository.deleteExpense(USERNAME, expense3.getExpenseId());
 
         List<Expense> expenses = getExpensesForUser(USERNAME);
@@ -77,11 +81,24 @@ class ExpenseRepositoryImplTest {
     }
 
     @Test
+    void deleteExpense_throwsDeletionExceptionWhenItFailsToDelete() {
+        assertThrows(DeletionException.class, () -> expenseRepository.deleteExpense(USERNAME, "N/A"));
+    }
+
+    @Test
     void getExpensesByCategoryAndMonth() {
         List<Expense> actualExpenses = expenseRepository.getExpensesByCategoryAndMonth(USERNAME, "UTILITIES", MAY);
 
         assertThat(actualExpenses.size()).isEqualTo(1);
         assertThat(actualExpenses.get(0).getDescription()).isEqualTo("Water Bill");
+    }
+
+    @Test
+    void getExpensesByMonth() {
+        List<Expense> actualExpenses = expenseRepository.getExpensesByMonth(USERNAME, APRIL);
+
+        assertThat(actualExpenses.size()).isEqualTo(1);
+        assertThat(actualExpenses.get(0).getDescription()).isEqualTo("Electric Bill");
     }
 
     private List<Expense> getExpensesForUser(String username) {
