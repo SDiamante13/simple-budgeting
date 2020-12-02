@@ -1,10 +1,12 @@
 package tech.pathtoprogramming.simplebudgeting.repository;
 
+import com.mongodb.client.result.DeleteResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import tech.pathtoprogramming.simplebudgeting.document.Expense;
+import tech.pathtoprogramming.simplebudgeting.exception.DeletionException;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -37,7 +39,10 @@ public class ExpenseRepositoryImpl implements ExpenseRepository {
     @Override
     public void deleteExpense(String username, String expenseId) {
         Query usernameWithExpenseIdQuery = findByExpenseIdQuery(expenseId).addCriteria(where("username").is(username));
-        mongoTemplate.remove(usernameWithExpenseIdQuery, Expense.class);
+        DeleteResult result = mongoTemplate.remove(usernameWithExpenseIdQuery, Expense.class);
+        if (result.getDeletedCount() == 0) {
+            throw new DeletionException(expenseId);
+        }
     }
 
     @Override

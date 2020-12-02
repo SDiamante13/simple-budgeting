@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import tech.pathtoprogramming.simplebudgeting.dto.ExpenseDto;
 import tech.pathtoprogramming.simplebudgeting.dto.ExpenseListDto;
 import tech.pathtoprogramming.simplebudgeting.service.ExpenseService;
-import tech.pathtoprogramming.simplebudgeting.service.UserService;
 
 import java.time.Month;
 
@@ -15,14 +14,13 @@ import java.time.Month;
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
 @Slf4j
-public class BudgetController {
+public class ExpenseController {
 
-    private final UserService userService;
     private final ExpenseService expenseService;
 
     @PostMapping("/users/{username}/expenses")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addExpense(@PathVariable String username, @RequestBody ExpenseDto expenseDto) {
+    public void saveExpense(@PathVariable String username, @RequestBody ExpenseDto expenseDto) {
         expenseService.saveExpense(username, expenseDto);
     }
 
@@ -40,7 +38,7 @@ public class BudgetController {
 
     @DeleteMapping("/users/{username}/expenses/{expenseId}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    public void getAllExpensesForMonth(
+    public void removeExpense(
             @PathVariable String username,
             @PathVariable String expenseId) {
         expenseService.removeExpense(username, expenseId);
