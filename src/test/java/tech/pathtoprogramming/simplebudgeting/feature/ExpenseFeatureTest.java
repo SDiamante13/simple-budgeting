@@ -62,7 +62,7 @@ class ExpenseFeatureTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.expenses", hasSize(2)))
                 .andExpect(jsonPath("$.expenses[0].description", is("Drinks with the boys")))
-                .andExpect(jsonPath("$.expenses[1].transactionDate", is("5/21/2020")));
+                .andExpect(jsonPath("$.expenses[1].transactionDate", is("5/21/2021")));
     }
 
     @Test
@@ -109,7 +109,7 @@ class ExpenseFeatureTest {
                 .category("OTHER")
                 .amount(65.50)
                 .description("Drinks with the boys")
-                .transactionDate(LocalDate.of(2020, 5, 28))
+                .transactionDate(LocalDate.of(2021, 5, 28))
                 .build();
 
         Expense expense2 = Expense.builder()
@@ -117,7 +117,7 @@ class ExpenseFeatureTest {
                 .category("SHOPPING")
                 .amount(127.88)
                 .description("New clothes")
-                .transactionDate(LocalDate.of(2020, 5, 21))
+                .transactionDate(LocalDate.of(2021, 5, 21))
                 .build();
 
         return Arrays.asList(expenseRepository.addExpense(expense1), expenseRepository.addExpense(expense2));
