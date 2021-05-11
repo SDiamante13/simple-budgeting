@@ -22,7 +22,6 @@ public class BudgetController {
     private final UserService userService;
     private final ExpenseService expenseService;
 
-
     @GetMapping("/api/v1/users/{username}/budget-overview")
     public BudgetOverviewDto getBudgetOverview(@PathVariable String username) {
         Month currentMonth = LocalDate.now().getMonth();
