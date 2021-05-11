@@ -14,6 +14,7 @@ import tech.pathtoprogramming.simplebudgeting.exception.handler.GlobalExceptionH
 import tech.pathtoprogramming.simplebudgeting.service.ExpenseService;
 import tech.pathtoprogramming.simplebudgeting.service.UserService;
 
+import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 public class BudgetControllerTest {
 
+    public static final Month CURRENT_MONTH = LocalDate.now().getMonth();
     @Mock
     UserService mockUserService;
 
@@ -83,14 +85,14 @@ public class BudgetControllerTest {
                         .amount(140.00)
                         .build());
 
-        when(mockExpenseService.getMonthlyExpenses(USERNAME, Month.JANUARY)).thenReturn(ExpenseListDto.builder()
+        when(mockExpenseService.getMonthlyExpenses(USERNAME, CURRENT_MONTH)).thenReturn(ExpenseListDto.builder()
                 .username(USERNAME)
                 .expenses(expenses)
                 .build());
 
         BudgetOverviewDto expectedBudgetOverview = BudgetOverviewDto.builder()
                 .username(USERNAME)
-                .month("JANUARY")
+                .month(CURRENT_MONTH.name())
                 .budgetStats(Arrays.asList(BudgetStat.builder()
                         .category("Groceries")
                         .currentAmount(260.00)

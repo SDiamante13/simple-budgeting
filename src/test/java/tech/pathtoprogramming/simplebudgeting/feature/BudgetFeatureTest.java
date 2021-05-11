@@ -15,6 +15,7 @@ import tech.pathtoprogramming.simplebudgeting.document.Expense;
 import tech.pathtoprogramming.simplebudgeting.document.User;
 
 import java.time.LocalDate;
+import java.time.Month;
 
 import static java.util.Collections.singletonList;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -37,6 +38,8 @@ class BudgetFeatureTest {
 
     private static final String USERNAME = "bob123";
 
+    private final Month month = LocalDate.now().getMonth();
+
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
@@ -48,7 +51,7 @@ class BudgetFeatureTest {
     void getBudgetOverview_returns200() throws Exception {
         mockMvc.perform(get("/api/v1/users/bob123/budget-overview"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.month", Matchers.is("JANUARY")))
+                .andExpect(jsonPath("$.month", Matchers.is(month.name())))
                 .andExpect(jsonPath("$.budgetStats[0].category", Matchers.is("Shopping")))
                 .andExpect(jsonPath("$.budgetStats[0].currentAmount", Matchers.is(300.00)))
                 .andExpect(jsonPath("$.budgetStats[0].maxThreshold", Matchers.is(400)));
@@ -60,7 +63,7 @@ class BudgetFeatureTest {
                 .category("Shopping")
                 .amount(100.00)
                 .description("Table")
-                .transactionDate(LocalDate.of(2021, 1, 2))
+                .transactionDate(LocalDate.of(2021, month, 2))
                 .build();
 
         Expense expense2 = Expense.builder()
@@ -68,7 +71,7 @@ class BudgetFeatureTest {
                 .category("Shopping")
                 .amount(200.00)
                 .description("New clothes")
-                .transactionDate(LocalDate.of(2021, 1, 5))
+                .transactionDate(LocalDate.of(2021, month, 5))
                 .build();
 
         User user = User.builder()
